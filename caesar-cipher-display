@@ -1,0 +1,92 @@
+import tkinter as tk
+from tkinter import ttk
+
+def display_grid(alphabet, shift, plaintext):
+    for i in range(26):
+        col = i + 2
+
+        if alphabet[i] in plaintext:
+            bg_top = '#7A89B8'
+            bg_bottom = '#A9B2C3'
+        else:
+            bg_top = bg_bottom = None
+
+        tk.Label(grid_frame, text=alphabet[i], width=2, height=2, borderwidth=1,
+                 relief='solid', bg=bg_top).grid(column=col, row=0, padx=1, pady=1)
+
+        shifted_char = alphabet[(i + shift) % 26]
+        tk.Label(grid_frame, text=shifted_char, width=2, height=2, borderwidth=1,
+                 relief='solid', bg=bg_bottom).grid(column=col, row=1, padx=1, pady=1)
+
+
+    end_col = 27 + 1 
+    start_col = 0
+    tk.Label(grid_frame, text='↓', width=2, height=2, bg='#A9B2C3').grid(column=end_col, row=0, padx=1, pady=1 )
+    tk.Label(grid_frame, text='↓', width=2, height=2, bg='#A9B2C3').grid(column=start_col, row=0, padx=1, pady=1)
+
+
+def caesar_encrypt(plaintext, shift):
+    plaintext = plaintext.replace(' ', '')
+    plaintext = plaintext.upper()
+    encrypted = ''
+    alphabet = [chr(i + ord('A')) for i in range (26)]
+
+    for i in range(len(plaintext)):
+        c = alphabet[(alphabet.index(plaintext[i].upper()) + shift) % 26]
+        print(c)
+        encrypted = encrypted + c
+
+    display_grid(alphabet, shift, plaintext)
+
+    output_var.set(f'Encrypted: {encrypted}')
+    print(encrypted)
+
+
+def reset():
+    plaintext = plaintext_entry.get()
+    shift = int(shift_entry.get())
+    if not plaintext or not shift:
+        return
+    if not isinstance(shift, int):
+        raise ValueError
+    print(caesar_encrypt(plaintext, shift))
+
+
+
+
+
+##############################GUI#########################################
+
+root = tk.Tk()
+root.title('caesar cipher step-by-step example')
+root.geometry('800x800')
+root.resizable(False, False)
+root.config(bg = '#A9B2C3')
+
+
+input_frame = tk.Frame(root, padx=10, pady=100, bg = '#A9B2C3')
+input_frame.pack()
+
+tk.Label(input_frame, text = 'text', bg = '#A9B2C3').grid(row = 0, column = 0, padx=5, pady=5)
+plaintext_entry = ttk.Entry(input_frame, width =30)
+plaintext_entry.grid(row=0, column=1)
+
+tk.Label(input_frame, text = 'shifts', bg = '#A9B2C3').grid(row = 1, column = 0, padx=5, pady=5)
+shift_entry = ttk.Entry(input_frame, width =30)
+shift_entry.grid(row=1, column=1)
+
+
+tk.Button(input_frame, text = 'start visulisation',command= reset, bg = '#7A89B8').grid(row=2, column= 0, columnspan = 2, pady=10)
+
+
+grid_frame = tk.Frame(root, bg = '#A9B2C3', pady=10)
+grid_frame.pack()
+
+
+output_var = tk.StringVar()
+tk.Label(root, bg = '#A9B2C3', textvariable=output_var).pack(pady=5)
+
+
+
+
+root.mainloop()
