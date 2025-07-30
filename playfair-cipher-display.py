@@ -144,6 +144,35 @@ root.geometry('500x500')
 root.resizable(False, False)
 root.config(bg = '#A9B2C3')
 
+def open_info_window():
+    explain_win = tk.Toplevel(root)
+    explain_win.title('How it works')
+    text = tk.Text(explain_win, wrap='word', width =60, height =30, bg = '#A9B2C3')
+    text.pack(padx=10,pady=10)
+    explanation = (
+            'The Playfair cipher is a digraph substitution cipher that encrypts pairs of letters.\n\n'
+            'How it works:\n'
+            '1. A 5x5 grid of letters is generated using a keyword. Duplicate letters are removed, and "J" is typically combined with "I".\n'
+            '2. The message is split into pairs of letters.\n'
+            '   - If both letters in a pair are the same, insert "X" between them.\n'
+            '   - If the message has an odd number of letters, append "X" at the end.\n\n'
+            'Encryption rules:\n'
+            '• If both letters are in the same row:\n'
+            '    → Replace each letter with the one to its right (wrap around if needed).\n'
+            '• If both are in the same column:\n'
+            '    → Replace each letter with the one below it (wrap around if needed).\n'
+            '• If they form a rectangle:\n'
+            '    → Replace each letter with the one in the same row but in the column of the other letter.\n\n'
+            'Decryption works by reversing the rules:\n'
+            '• Same row → shift left\n'
+            '• Same column → shift up\n'
+            '• Rectangle → same logic as encryption (columns are swapped)\n\n'
+            'The Playfair cipher provides stronger encryption than monoalphabetic ciphers due to digraph pairing.'
+        )
+    text.insert(tk.END, explanation)
+    text.config(state = 'disabled')
+
+
 input_frame = tk.Frame(root, padx=10, pady=10, bg = '#A9B2C3')
 input_frame.pack()
 
@@ -170,4 +199,5 @@ control_frame.pack()
 
 ttk.Button(control_frame, text="Next", command=next_step).pack(side=tk.LEFT, padx=5)
 
+ttk.Button(control_frame, text="Explanation", command=open_info_window).pack(side=tk.LEFT, padx=5)
 root.mainloop()
